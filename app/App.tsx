@@ -23,6 +23,7 @@ import { BreathingScreen } from './src/screens/teen/BreathingScreen';
 import { SafetyPlanScreen } from './src/screens/teen/SafetyPlanScreen';
 import { SkillsScreen } from './src/screens/teen/SkillsScreen';
 import { EmotionDetailScreen } from './src/screens/teen/EmotionDetailScreen';
+import { GroundingScreen } from './src/screens/teen/GroundingScreen';
 
 // Parent Screens
 import { DashboardScreen } from './src/screens/parent/DashboardScreen';
@@ -165,6 +166,11 @@ function TeenStack() {
         name="EmotionDetail" 
         component={EmotionDetailScreen}
         options={{ presentation: 'card' }}
+      />
+      <Stack.Screen 
+        name="Grounding" 
+        component={GroundingScreen}
+        options={{ presentation: 'fullScreenModal' }}
       />
       <Stack.Screen 
         name="Journal" 

@@ -389,6 +389,296 @@ export const EMOTION_GUIDES: EmotionGuide[] = [
       ],
       duration: "1 minute"
     }
+  },
+  
+  {
+    id: 'overwhelmed',
+    name: 'Overwhelmed',
+    emoji: '🤯',
+    color: '#EC4899',
+    gradient: ['#EC4899', '#F472B6'],
+    tagline: "i show up when there's too much — too many tasks, feelings, or expectations",
+    
+    whatItIs: "Overwhelm is your brain's way of saying 'system overload.' It's not weakness — it's a signal that you've hit your capacity and need to offload something.",
+    
+    whyItExists: "Your brain has limited processing power. When too much comes at once — deadlines, emotions, social stuff — overwhelm is the alarm saying 'slow down before you crash.'",
+    
+    brainScience: {
+      whatsHappening: "Your prefrontal cortex (the planning/organizing part) gets flooded and starts to shut down. That's why you can't think straight or make decisions when overwhelmed. It's not laziness — it's overload.",
+      funFact: "Your working memory can only hold about 4-7 things at once. When you're trying to juggle more, everything starts to fall."
+    },
+    
+    superpower: "Overwhelm forces you to prioritize. It's your brain demanding that you figure out what actually matters and let go of the rest.",
+    
+    bodySignals: [
+      "Can't think straight or make decisions",
+      "Wanting to cry or shut down",
+      "Paralysis — can't start anything",
+      "Tight chest, shallow breathing",
+      "Snapping at people",
+      "Wanting to escape or hide"
+    ],
+    
+    warningSignals: [
+      "Constantly saying 'I can't handle this'",
+      "Avoiding everything instead of tackling anything",
+      "Breaking down regularly",
+      "Physical symptoms (headaches, stomach issues)",
+      "Feeling like you're drowning daily"
+    ],
+    
+    copingTips: [
+      "Brain dump: write EVERYTHING down to get it out of your head",
+      "Pick ONE thing — just the next small step",
+      "It's okay to drop balls. Not everything is equally important",
+      "Ask for help — seriously, people want to help",
+      "Take 5 minutes to just breathe before deciding anything"
+    ],
+    
+    insideOutMoment: "Remember when ALL of Riley's emotions were pressing buttons at once during the move? That chaos, that inability to function — that's overwhelm. The fix wasn't doing more; it was letting things settle.",
+    
+    quickTechnique: {
+      name: "Brain Dump + Pick One",
+      steps: [
+        "Write down EVERYTHING on your mind (2 min, no editing)",
+        "Circle the ONE thing that would help most right now",
+        "Cross out anything that can wait til tomorrow",
+        "Do the ONE thing for just 10 minutes"
+      ],
+      duration: "5 minutes"
+    }
+  },
+  
+  {
+    id: 'lonely',
+    name: 'Lonely',
+    emoji: '🥺',
+    color: '#6366F1',
+    gradient: ['#6366F1', '#818CF8'],
+    tagline: "i'm not about being alone — i'm about feeling unseen and disconnected",
+    
+    whatItIs: "Loneliness isn't about how many people are around you — it's about feeling truly seen and connected. You can be lonely in a crowd and content alone. It's about the quality of connection.",
+    
+    whyItExists: "Humans are social creatures. We literally need connection to survive and thrive. Loneliness is your brain's signal that you need more meaningful interaction.",
+    
+    brainScience: {
+      whatsHappening: "Loneliness activates the same brain regions as physical pain. It also increases cortisol (stress hormone) and can affect your immune system. Your brain treats social disconnection as a survival threat.",
+      funFact: "Social media can actually increase loneliness because it often provides 'junk food' connection — looks filling but isn't nourishing."
+    },
+    
+    superpower: "Loneliness motivates you to seek real connection. It can push you to reach out, be vulnerable, and build deeper relationships.",
+    
+    bodySignals: [
+      "Ache in your chest",
+      "Feeling invisible or unseen",
+      "Scrolling social media but feeling worse",
+      "Craving deep conversation",
+      "Feeling like no one 'gets' you",
+      "Empty even when busy"
+    ],
+    
+    warningSignals: [
+      "Isolating yourself more and more",
+      "Feeling like a burden to others",
+      "Believing no one would notice if you disappeared",
+      "Weeks without meaningful conversation",
+      "Using substances or screens to numb the feeling"
+    ],
+    
+    copingTips: [
+      "Text ONE person — even just 'hey, thinking of you'",
+      "Quality > quantity — one real friend beats 100 followers",
+      "Be the initiator — don't wait to be invited",
+      "Join something (club, team, group) around an interest",
+      "Talk to a counselor — they're literally trained for this"
+    ],
+    
+    insideOutMoment: "Think of Riley when she first moved — surrounded by family but completely alone inside. Her parents were there but didn't really see what she was going through. That's loneliness.",
+    
+    quickTechnique: {
+      name: "Reach Out Right Now",
+      steps: [
+        "Think of ONE person you trust (even a little)",
+        "Send them a text: 'hey, been thinking of you'",
+        "Or: 'having a rough day, you around?'",
+        "Don't overthink it — connection starts small"
+      ],
+      duration: "2 minutes"
+    }
+  },
+  
+  {
+    id: 'jealous',
+    name: 'Jealousy',
+    emoji: '😒',
+    color: '#22C55E',
+    gradient: ['#22C55E', '#4ADE80'],
+    tagline: "i point at what you want — the question is what will you do about it",
+    
+    whatItIs: "Jealousy is the uncomfortable feeling when someone has something you want — attention, success, relationships, stuff. It's often mixed with fear of losing what you have or not getting what you deserve.",
+    
+    whyItExists: "Jealousy helped our ancestors compete for resources and mates. Today, it can highlight what you truly value and want for yourself.",
+    
+    brainScience: {
+      whatsHappening: "Jealousy activates your brain's threat detection system and reward centers simultaneously. You perceive a threat to something you value while also wanting what someone else has.",
+      funFact: "Social media has supercharged jealousy because you're constantly comparing your real life to everyone's highlight reels."
+    },
+    
+    superpower: "Jealousy is information. It shows you what you actually want. Instead of just feeling bad, you can use it as a compass for your goals.",
+    
+    bodySignals: [
+      "Tightness in chest or stomach",
+      "Obsessing over someone's success/life",
+      "Urge to criticize or put them down",
+      "Feeling 'less than' or inadequate",
+      "Compulsive social media checking",
+      "Bitterness or resentment"
+    ],
+    
+    warningSignals: [
+      "Constant comparison to others",
+      "Can't be happy for anyone",
+      "Sabotaging relationships over jealousy",
+      "Obsessing over specific people",
+      "Your self-worth depends on being 'better than'"
+    ],
+    
+    copingTips: [
+      "Ask: What does this jealousy tell me I want?",
+      "Their success doesn't reduce yours — abundance mindset",
+      "Limit social media comparison time",
+      "Use it as motivation, not bitterness",
+      "Practice genuine compliments (it helps, seriously)"
+    ],
+    
+    insideOutMoment: "Imagine if Riley saw a new kid get all the attention she used to get. That burning feeling of 'that should be me' — that's jealousy. The movie Turning Red shows this with Mei and her friends.",
+    
+    quickTechnique: {
+      name: "Jealousy to Clarity",
+      steps: [
+        "Name exactly what you're jealous of",
+        "Ask: Do I actually want this, or just think I should?",
+        "If yes: What's ONE step toward getting it myself?",
+        "If no: Why am I comparing myself here?"
+      ],
+      duration: "3 minutes"
+    }
+  },
+  
+  {
+    id: 'embarrassed',
+    name: 'Embarrassment',
+    emoji: '😳',
+    color: '#F97316',
+    gradient: ['#F97316', '#FB923C'],
+    tagline: "i'm the spotlight feeling — when you think everyone is watching and judging",
+    
+    whatItIs: "Embarrassment is that hot, wanting-to-disappear feeling when you think you've done something socially awkward or exposed something about yourself. It's different from shame — it's usually about a moment, not your whole identity.",
+    
+    whyItExists: "Embarrassment helps us fit into social groups. It teaches us social norms and motivates us to repair social mistakes. It's evolution's way of saying 'let's not do that again.'",
+    
+    brainScience: {
+      whatsHappening: "Blood rushes to your face (blushing), your body heats up, and your brain goes into 'everyone is watching' mode. The spotlight effect makes you think people notice way more than they actually do.",
+      funFact: "Studies show people barely notice or remember your embarrassing moments. That thing you cringe about? Others forgot in 5 minutes."
+    },
+    
+    superpower: "Embarrassment shows you care about how you come across. It also makes you relatable — people who never get embarrassed seem robotic. Owning it can be charming.",
+    
+    bodySignals: [
+      "Face getting hot (blushing)",
+      "Wanting to disappear or run away",
+      "Nervous laughter",
+      "Avoiding eye contact",
+      "Replaying the moment over and over",
+      "Physical cringing"
+    ],
+    
+    warningSignals: [
+      "Avoiding all situations where you might be embarrassed",
+      "Constant fear of judgment",
+      "Old embarrassments keeping you up at night",
+      "Never speaking up or being yourself",
+      "Apologizing constantly for existing"
+    ],
+    
+    copingTips: [
+      "The spotlight effect: people notice 10% of what you think they notice",
+      "Laugh at yourself — owning it takes away its power",
+      "Everyone has embarrassing moments. Literally everyone.",
+      "In a week, no one will remember. In a month, definitely not.",
+      "Embarrassment is temporary; avoiding life is permanent"
+    ],
+    
+    insideOutMoment: "Remember Riley's first day at school when she started crying in front of everyone? That burning need to disappear? Classic embarrassment. But here's the thing — her classmates weren't judging; they felt for her.",
+    
+    quickTechnique: {
+      name: "Embarrassment Reset",
+      steps: [
+        "Take 3 deep breaths (seriously, do it)",
+        "Ask: Will this matter in 5 years? (probably not)",
+        "Remember: Everyone is too worried about themselves to focus on you",
+        "Laugh if you can — 'well that happened 😅'"
+      ],
+      duration: "1 minute"
+    }
+  },
+  
+  {
+    id: 'frustrated',
+    name: 'Frustration',
+    emoji: '😤',
+    color: '#EF4444',
+    gradient: ['#EF4444', '#F87171'],
+    tagline: "i show up when things aren't working — and i want them fixed NOW",
+    
+    whatItIs: "Frustration is the feeling of being blocked from a goal. Something isn't working, someone isn't understanding, progress isn't happening — and you're stuck. It's anger's annoying little sibling.",
+    
+    whyItExists: "Frustration motivates problem-solving. It pushes you to find new approaches, ask for help, or persist through obstacles. It's energy for change.",
+    
+    brainScience: {
+      whatsHappening: "Your brain expects a certain outcome, and when reality doesn't match, it creates tension. This releases cortisol and adrenaline — giving you energy but also making you tense.",
+      funFact: "Frustration tolerance is like a muscle — the more you work through frustrations, the better you get at handling them."
+    },
+    
+    superpower: "Frustration is persistence fuel. People who achieve big things aren't frustration-free — they're good at channeling it. It means you care about the outcome.",
+    
+    bodySignals: [
+      "Tense muscles, especially jaw and shoulders",
+      "Sighing repeatedly",
+      "Urge to give up or throw things",
+      "Racing, impatient thoughts",
+      "Snapping at people",
+      "Inability to sit still"
+    ],
+    
+    warningSignals: [
+      "Constantly frustrated at everything",
+      "Taking it out on others",
+      "Destroying relationships over small stuff",
+      "Rage quitting everything",
+      "Frustration turning into hopelessness"
+    ],
+    
+    copingTips: [
+      "Step away for 5-10 minutes — fresh eyes help",
+      "Ask: Is this approach working, or do I need a new one?",
+      "Break it down smaller — what's the NEXT tiny step?",
+      "Ask for help — someone else might see the solution",
+      "Physical release — squeeze something, do push-ups"
+    ],
+    
+    insideOutMoment: "In Inside Out 2, Anxiety keeps trying to control everything and getting more and more frustrated when it doesn't work. The lesson? Sometimes you have to let go of controlling the outcome.",
+    
+    quickTechnique: {
+      name: "Frustration Pause",
+      steps: [
+        "Stop what you're doing",
+        "10 deep breaths or 20 jumping jacks",
+        "Ask: 'What's actually in my control here?'",
+        "Either try a different approach or take a real break"
+      ],
+      duration: "3 minutes"
+    }
   }
 ];
 

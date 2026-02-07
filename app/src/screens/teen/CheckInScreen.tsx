@@ -71,7 +71,12 @@ export function CheckInScreen() {
         createdAt: doc.data().createdAt?.toDate() || new Date(),
       })) as MoodCheckin[];
       setRecentCheckins(data);
-      setStreak(data.length);
+      
+      // Calculate ACTUAL streak (unique days, not total check-ins)
+      const uniqueDays = new Set(
+        data.map(c => format(new Date(c.createdAt), 'yyyy-MM-dd'))
+      );
+      setStreak(uniqueDays.size);
     } catch (error) {
       console.error('Error fetching checkins:', error);
     }

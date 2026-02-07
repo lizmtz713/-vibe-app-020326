@@ -102,17 +102,7 @@ export function ResourcesScreen({ navigation }: any) {
         navigation.navigate('Breathing');
         break;
       case 'grounding':
-        Alert.alert(
-          '🌿 5-4-3-2-1 grounding',
-          'Look around and name:\n\n' +
-          '5️⃣ things you can SEE\n' +
-          '4️⃣ things you can HEAR\n' +
-          '3️⃣ things you can TOUCH\n' +
-          '2️⃣ things you can SMELL\n' +
-          '1️⃣ thing you can TASTE\n\n' +
-          'Take your time with each one 💜',
-          [{ text: 'got it', style: 'default' }]
-        );
+        navigation.navigate('Grounding');
         break;
       case 'ice':
         Alert.alert(

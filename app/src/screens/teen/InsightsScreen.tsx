@@ -44,12 +44,17 @@ const MOOD_EXPLAINERS: Record<number, { title: string; why: string; tip: string 
 
 // Quick emotion cards for InsightsScreen - tap for full guide
 const EMOTION_VOCABULARY = [
-  { id: "anxiety", feeling: "anxious", emoji: "😰", signs: "racing thoughts, tight chest, can't sit still", deeper: "tap to learn about anxiety →" },
-  { id: "sadness", feeling: "sad", emoji: "😢", signs: "heavy, tired, want to cry or hide", deeper: "tap to learn about sadness →" },
-  { id: "anger", feeling: "angry", emoji: "😤", signs: "hot, tense, want to snap", deeper: "tap to learn about anger →" },
-  { id: "fear", feeling: "scared", emoji: "😨", signs: "heart racing, want to run or freeze", deeper: "tap to learn about fear →" },
-  { id: "joy", feeling: "happy", emoji: "😄", signs: "light, energized, connected", deeper: "tap to learn about joy →" },
-  { id: "shame", feeling: "ashamed", emoji: "😞", signs: "want to hide, feeling 'not good enough'", deeper: "tap to learn about shame →" },
+  { id: "anxiety", feeling: "anxious", emoji: "😰", signs: "racing thoughts, tight chest, can't sit still" },
+  { id: "sadness", feeling: "sad", emoji: "😢", signs: "heavy, tired, want to cry or hide" },
+  { id: "anger", feeling: "angry", emoji: "😤", signs: "hot, tense, want to snap" },
+  { id: "fear", feeling: "scared", emoji: "😨", signs: "heart racing, want to run or freeze" },
+  { id: "joy", feeling: "happy", emoji: "😄", signs: "light, energized, connected" },
+  { id: "shame", feeling: "ashamed", emoji: "😞", signs: "want to hide, feeling 'not good enough'" },
+  { id: "overwhelmed", feeling: "overwhelmed", emoji: "🤯", signs: "can't think, too much at once" },
+  { id: "lonely", feeling: "lonely", emoji: "🥺", signs: "disconnected, unseen, empty" },
+  { id: "jealous", feeling: "jealous", emoji: "😒", signs: "comparing, wanting what others have" },
+  { id: "embarrassed", feeling: "embarrassed", emoji: "😳", signs: "face hot, want to disappear" },
+  { id: "frustrated", feeling: "frustrated", emoji: "😤", signs: "stuck, things not working" },
 ];
 
 const DAY_PATTERNS: Record<number, string> = {
