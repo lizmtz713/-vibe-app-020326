@@ -95,7 +95,7 @@ export function CheckInScreen() {
     try {
       await addDoc(collection(db, 'checkins'), {
         userId: user.id,
-        familyId: user.familyId,
+        ...(user.familyId && { familyId: user.familyId }),
         mood,
         note: note.trim() || null,
         createdAt: serverTimestamp(),
