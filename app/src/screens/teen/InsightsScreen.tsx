@@ -78,6 +78,7 @@ export function InsightsScreen() {
   const [moodByDay, setMoodByDay] = useState<Record<number, number>>({});
   const [lowestDay, setLowestDay] = useState<number | null>(null);
   const [streak, setStreak] = useState(0);
+  const [expandedEmotion, setExpandedEmotion] = useState<number | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -183,10 +184,22 @@ export function InsightsScreen() {
           <Text style={styles.sectionSub}>tap to explore</Text>
           
           {EMOTION_VOCABULARY.map((emotion, i) => (
-            <TouchableOpacity key={i} style={styles.emotionCard} activeOpacity={0.8}>
-              <Text style={styles.emotionName}>{emotion.feeling}</Text>
-              <Text style={styles.emotionSigns}>signs: {emotion.signs}</Text>
-              <Text style={styles.emotionDeeper}>🔍 {emotion.deeper}</Text>
+            <TouchableOpacity 
+              key={i} 
+              style={[styles.emotionCard, expandedEmotion === i && styles.emotionCardExpanded]} 
+              activeOpacity={0.8}
+              onPress={() => setExpandedEmotion(expandedEmotion === i ? null : i)}
+            >
+              <View style={styles.emotionHeader}>
+                <Text style={styles.emotionName}>{emotion.feeling}</Text>
+                <Text style={styles.expandIcon}>{expandedEmotion === i ? '−' : '+'}</Text>
+              </View>
+              {expandedEmotion === i && (
+                <View style={styles.emotionDetails}>
+                  <Text style={styles.emotionSigns}>📍 signs: {emotion.signs}</Text>
+                  <Text style={styles.emotionDeeper}>🔍 what's underneath: {emotion.deeper}</Text>
+                </View>
+              )}
             </TouchableOpacity>
           ))}
         </View>
@@ -280,7 +293,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF', borderRadius: 16, padding: 18, marginBottom: 10,
     borderLeftWidth: 4, borderLeftColor: '#8B5CF6',
   },
-  emotionName: { fontSize: 18, fontWeight: '700', color: '#1F2937', marginBottom: 6 },
+  emotionCardExpanded: {
+    backgroundColor: '#F5F3FF', borderLeftColor: '#6366F1',
+  },
+  emotionHeader: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+  },
+  emotionName: { fontSize: 18, fontWeight: '700', color: '#1F2937' },
+  expandIcon: { fontSize: 24, color: '#8B5CF6', fontWeight: '300' },
+  emotionDetails: { marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: '#E5E7EB' },
   emotionSigns: { fontSize: 14, color: '#6B7280', marginBottom: 8 },
   emotionDeeper: { fontSize: 14, color: '#6366F1', fontStyle: 'italic' },
   // Brain Card

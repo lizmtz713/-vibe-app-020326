@@ -38,26 +38,35 @@ const COPING_TOOLS = [
     description: 'breathe in 4s, hold 4s, out 4s, hold 4s — actually works fr',
     icon: '🫁',
     interactive: true,
+    action: 'breathing',
   },
   {
     title: '5-4-3-2-1 grounding',
     description: '5 things you see, 4 hear, 3 touch, 2 smell, 1 taste',
     icon: '🌿',
+    interactive: true,
+    action: 'grounding',
   },
   {
     title: 'ice cube reset',
     description: 'hold ice — sounds weird but it snaps you out of spiraling',
     icon: '🧊',
+    interactive: true,
+    action: 'ice',
   },
   {
     title: 'brain dump',
     description: 'write everything in your head. don\'t think, just write.',
     icon: '✍️',
+    interactive: true,
+    action: 'journal',
   },
   {
     title: 'move your body',
     description: 'dance it out, stretch, walk — get out of your head',
     icon: '🏃',
+    interactive: true,
+    action: 'move',
   },
 ];
 
@@ -86,8 +95,51 @@ export function ResourcesScreen({ navigation }: any) {
   };
 
   const handleToolPress = (tool: any) => {
-    if (tool.interactive && tool.title === 'box breathing') {
-      navigation.navigate('Breathing');
+    if (!tool.interactive) return;
+    
+    switch (tool.action) {
+      case 'breathing':
+        navigation.navigate('Breathing');
+        break;
+      case 'grounding':
+        Alert.alert(
+          '🌿 5-4-3-2-1 grounding',
+          'Look around and name:\n\n' +
+          '5️⃣ things you can SEE\n' +
+          '4️⃣ things you can HEAR\n' +
+          '3️⃣ things you can TOUCH\n' +
+          '2️⃣ things you can SMELL\n' +
+          '1️⃣ thing you can TASTE\n\n' +
+          'Take your time with each one 💜',
+          [{ text: 'got it', style: 'default' }]
+        );
+        break;
+      case 'ice':
+        Alert.alert(
+          '🧊 ice cube reset',
+          'Grab an ice cube and hold it in your hand.\n\n' +
+          'Focus on the cold sensation. Notice how it feels as it melts.\n\n' +
+          'This activates your nervous system and helps break the spiral.\n\n' +
+          'Hold it for 30-60 seconds or until you feel more grounded.',
+          [{ text: 'i\'ll try it', style: 'default' }]
+        );
+        break;
+      case 'journal':
+        navigation.navigate('Journal');
+        break;
+      case 'move':
+        Alert.alert(
+          '🏃 move your body',
+          'Pick one:\n\n' +
+          '💃 Dance to ONE song (no skipping)\n' +
+          '🚶 Walk around the block\n' +
+          '🧘 Stretch for 2 minutes\n' +
+          '🦘 10 jumping jacks\n' +
+          '🤸 Shake your whole body for 30 sec\n\n' +
+          'Movement releases stuck energy. Trust the process.',
+          [{ text: 'let\'s go', style: 'default' }]
+        );
+        break;
     }
   };
 
