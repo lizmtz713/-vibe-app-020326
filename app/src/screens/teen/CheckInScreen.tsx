@@ -22,6 +22,20 @@ const MOOD_VIBES: Record<number, { emoji: string; label: string; vibe: string }>
   5: { emoji: '😄', label: 'great', vibe: 'immaculate vibes' },
 };
 
+// Rotating quick prompts - more engaging than static "journal"
+const QUICK_PROMPTS = [
+  { label: "wanna vent?", placeholder: "spill the tea..." },
+  { label: "one word for today?", placeholder: "type it out..." },
+  { label: "what's draining your battery? 🔋", placeholder: "lowkey..." },
+  { label: "who made you smile today?", placeholder: "shoutout to..." },
+  { label: "what do you need rn?", placeholder: "fr i need..." },
+  { label: "rate your social energy 1-10", placeholder: "mine's like..." },
+  { label: "any wins today? even small ones", placeholder: "ngl i did..." },
+  { label: "what's living in your head rent free?", placeholder: "can't stop thinking about..." },
+  { label: "describe your day in an emoji", placeholder: "the vibe is..." },
+  { label: "what would make tomorrow better?", placeholder: "honestly..." },
+];
+
 export function CheckInScreen() {
   const { user } = useAuth();
   const [mood, setMood] = useState<number | null>(null);
@@ -30,7 +44,9 @@ export function CheckInScreen() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [recentCheckins, setRecentCheckins] = useState<MoodCheckin[]>([]);
   const [streak, setStreak] = useState(0);
+  const [promptIndex, setPromptIndex] = useState(() => Math.floor(Math.random() * QUICK_PROMPTS.length));
   
+  const currentPrompt = QUICK_PROMPTS[promptIndex];
   const scaleAnims = useRef(MOODS.map(() => new Animated.Value(1))).current;
   const successScale = useRef(new Animated.Value(0)).current;
   const successOpacity = useRef(new Animated.Value(0)).current;
@@ -172,12 +188,20 @@ export function CheckInScreen() {
           </View>
         )}
 
-        {/* Note Input */}
+        {/* Note Input with Rotating Prompts */}
         <View style={styles.glassCard}>
-          <Text style={styles.noteLabel}>wanna vent? (optional, stays private fr)</Text>
+          <View style={styles.promptHeader}>
+            <Text style={styles.noteLabel}>{currentPrompt.label} (optional)</Text>
+            <TouchableOpacity 
+              onPress={() => setPromptIndex((promptIndex + 1) % QUICK_PROMPTS.length)}
+              style={styles.shuffleButton}
+            >
+              <Text style={styles.shuffleText}>🔀 switch</Text>
+            </TouchableOpacity>
+          </View>
           <TextInput
             style={styles.noteInput}
-            placeholder="spill the tea..."
+            placeholder={currentPrompt.placeholder}
             placeholderTextColor="rgba(255,255,255,0.5)"
             multiline
             value={note}
@@ -254,7 +278,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 24, padding: 20,
     marginBottom: 24, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)',
   },
-  noteLabel: { color: 'rgba(255,255,255,0.8)', fontSize: 14, marginBottom: 12, fontWeight: '500' },
+  promptHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
+  shuffleButton: { backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12 },
+  shuffleText: { color: '#FFF', fontSize: 12, fontWeight: '600' },
+  noteLabel: { color: 'rgba(255,255,255,0.8)', fontSize: 14, fontWeight: '500', flex: 1 },
   noteInput: {
     color: '#FFF', fontSize: 16, minHeight: 80, textAlignVertical: 'top',
   },
