@@ -8,7 +8,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../contexts/AuthContext';
 import { SERIOUS_TOPICS } from '../../data/serious-topics';
-import { ROLEPLAY_SCENARIOS, getScenariosByAge, getScenariosByTopic } from '../../data/roleplay-scenarios';
+import { ROLEPLAY_SCENARIOS, getScenariosByAge, getScenariosByTopic, RoleplayScenario } from '../../data/roleplay-scenarios';
+import { AIService, ConversationMessage } from '../../services/AIProviderService';
+import { generateFeedback as generateLocalFeedback } from '../../services/RoleplayAIService';
+import { ProgressService } from '../../services/ProgressTrackingService';
 
 const { width, height } = Dimensions.get('window');
 
@@ -19,18 +22,8 @@ interface Message {
   timestamp: Date;
 }
 
-interface Scenario {
-  id: string;
-  title: string;
-  description: string;
-  persona: string;
-  personaDescription: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  firstMessage: string;
-  hints: string[];
-  goodResponses: string[];
-  skillsTargeted: string[];
-}
+// Use imported RoleplayScenario type from data file
+type Scenario = RoleplayScenario;
 
 type RoleplayState = 'select' | 'setup' | 'active' | 'feedback';
 
@@ -47,6 +40,7 @@ export function RoleplayScreen({ navigation, route }: any) {
   const [currentHintIndex, setCurrentHintIndex] = useState(0);
   const [turnCount, setTurnCount] = useState(0);
   const [feedbackData, setFeedbackData] = useState<any>(null);
+  const [newAchievements, setNewAchievements] = useState<any[]>([]);
   
   const scrollViewRef = useRef<ScrollView>(null);
   const inputRef = useRef<TextInput>(null);
@@ -102,13 +96,28 @@ export function RoleplayScreen({ navigation, route }: any) {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const messageContent = inputText.trim();
     setInputText('');
     setIsTyping(true);
+    const currentTurn = turnCount;
     setTurnCount(prev => prev + 1);
 
-    // Simulate AI response (replace with actual API call)
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(userMessage.content, selectedScenario, turnCount);
+    try {
+      // Build conversation history for AI (excluding system messages)
+      const conversationHistory: ConversationMessage[] = messages
+        .filter(m => m.role !== 'system')
+        .map(m => ({
+          role: m.role as 'user' | 'ai',
+          content: m.content,
+        }));
+
+      // Call AI Service
+      const aiResponse = await AIService.generateResponse({
+        scenario: selectedScenario,
+        conversationHistory,
+        userMessage: messageContent,
+        userAge: user?.age || 15,
+      });
       
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -121,84 +130,45 @@ export function RoleplayScreen({ navigation, route }: any) {
       setIsTyping(false);
 
       // Check for safety triggers
-      if (aiResponse.shouldPause) {
+      if (aiResponse.safetyTriggered) {
         handleSafetyPause();
       }
 
-      // Check if scenario should end
-      if (turnCount >= 5 || aiResponse.shouldEnd) {
+      // Check if scenario should end (after 6 turns or natural ending)
+      if (currentTurn >= 5) {
         setTimeout(() => {
           generateFeedback();
         }, 1500);
       }
 
       scrollViewRef.current?.scrollToEnd({ animated: true });
-    }, 1500);
+    } catch (error) {
+      console.error('AI response error:', error);
+      setIsTyping(false);
+      
+      // Fallback to local response generation
+      const fallbackResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'ai',
+        content: getFallbackResponse(currentTurn, selectedScenario),
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, fallbackResponse]);
+    }
 
     scrollViewRef.current?.scrollToEnd({ animated: true });
   };
-
-  const generateAIResponse = (userInput: string, scenario: Scenario, turn: number) => {
-    // This would be replaced with actual AI API call
-    // For now, returning contextual responses based on scenario
-    
-    // Check for crisis keywords
-    const crisisKeywords = ['kill myself', 'want to die', 'suicide', 'end it', 'hurt myself'];
-    const isCrisis = crisisKeywords.some(kw => userInput.toLowerCase().includes(kw));
-    
-    if (isCrisis) {
-      return {
-        content: "Hey — I want to pause for a second. What you just said sounds really heavy. Are you okay right now? If you're having thoughts of hurting yourself, I want you to know that matters. You can text 988 or call anytime. Do you want to keep practicing, or do you need to talk to someone real?",
-        shouldPause: true,
-        shouldEnd: false,
-      };
-    }
-
-    // Contextual responses based on turn and scenario
-    const responses = getContextualResponses(scenario.id, turn, userInput);
-    
-    return {
-      content: responses[Math.floor(Math.random() * responses.length)],
-      shouldPause: false,
-      shouldEnd: turn >= 5,
-    };
-  };
-
-  const getContextualResponses = (scenarioId: string, turn: number, userInput: string): string[] => {
-    // Example contextual responses - would be generated by AI in production
-    const responseBank: Record<string, string[][]> = {
-      'peer-pressure-substances': [
-        ["Come on, everyone's doing it. Don't be weird about it.", "It's not a big deal. Just try it once."],
-        ["Why are you being like this? I thought we were friends.", "No one's gonna find out. Stop being paranoid."],
-        ["Whatever, more for us I guess. You're missing out.", "I didn't think you'd be such a buzzkill."],
-        ["Fine, fine. I'll stop asking. But you don't know what you're missing.", "Okay I get it. Sorry for pushing."],
-        ["Actually... respect for sticking to what you want. Most people just give in.", "Alright, I hear you. Let's do something else."],
-      ],
-      'telling-parent-struggling': [
-        ["What do you mean you're 'struggling'? With what?", "Is this about school? What's going on?"],
-        ["Why didn't you tell me sooner? How long has this been going on?", "I don't understand. You seemed fine."],
-        ["Okay... I'm listening. I'm trying not to freak out here.", "I appreciate you telling me. This is a lot to take in."],
-        ["What do you need from me? How can I help?", "Thank you for trusting me with this. Let's figure this out together."],
-        ["I love you no matter what. We'll get through this.", "I'm glad you told me. That took courage."],
-      ],
-      'friend-self-harm': [
-        ["What? What are you talking about?", "Why would you think that?"],
-        ["I don't want to talk about it. It's not a big deal.", "Can you just drop it? I'm fine."],
-        ["Why do you even care? Just leave me alone.", "You wouldn't understand."],
-        ["I... I don't know how to stop. I've tried.", "It's the only thing that helps when everything is too much."],
-        ["You really won't tell anyone? Promise?", "I'm scared. I don't know what to do."],
-      ],
-      'default': [
-        ["I hear what you're saying.", "Okay, go on."],
-        ["What do you mean by that?", "Can you explain more?"],
-        ["That's interesting. Tell me more.", "I'm listening."],
-        ["How does that make you feel?", "What happened next?"],
-        ["I see. And then?", "That sounds hard."],
-      ],
-    };
-
-    const bank = responseBank[scenarioId] || responseBank['default'];
-    return bank[Math.min(turn, bank.length - 1)];
+  
+  // Fallback when AI service unavailable
+  const getFallbackResponse = (turn: number, scenario: Scenario): string => {
+    const fallbacks = [
+      "I hear what you're saying...",
+      "That's a lot to think about.",
+      "Can you tell me more?",
+      "I appreciate you sharing that.",
+      "Let me think about that for a second.",
+    ];
+    return fallbacks[turn % fallbacks.length];
   };
 
   const handleSafetyPause = () => {
@@ -213,42 +183,107 @@ export function RoleplayScreen({ navigation, route }: any) {
     );
   };
 
-  const generateFeedback = () => {
+  const generateFeedback = async () => {
     if (!selectedScenario) return;
 
-    // Generate feedback based on conversation
-    // This would use AI in production
-    const feedback = {
-      strengths: [
-        "You stayed calm and didn't get defensive",
-        "You expressed your feelings clearly",
-        "You didn't over-explain or justify yourself",
-      ],
-      growthAreas: [
-        "You apologized when you didn't need to",
-        "You could be more direct with your boundary",
-      ],
-      skillsUsed: selectedScenario.skillsTargeted,
-      overallScore: 4, // out of 5
-      suggestion: "Try using the 'broken record' technique — repeat your boundary calmly without adding new explanations.",
-    };
+    // Build conversation history
+    const conversationHistory: ConversationMessage[] = messages
+      .filter(m => m.role !== 'system')
+      .map(m => ({
+        role: m.role as 'user' | 'ai',
+        content: m.content,
+      }));
 
-    setFeedbackData(feedback);
+    try {
+      // Try AI-powered feedback first
+      const aiFeedback = await AIService.generateFeedback({
+        scenario: selectedScenario,
+        conversationHistory,
+        userAge: user?.age || 15,
+      });
+
+      setFeedbackData({
+        strengths: aiFeedback.strengths,
+        growthAreas: aiFeedback.growthAreas,
+        skillsUsed: selectedScenario.skillsTargeted,
+        overallScore: aiFeedback.overallScore,
+        suggestion: aiFeedback.suggestion,
+        detailedFeedback: aiFeedback.detailedFeedback,
+      });
+    } catch (error) {
+      console.error('AI feedback error:', error);
+      
+      // Fallback to local feedback generation
+      const localFeedback = generateLocalFeedback({
+        scenario: selectedScenario,
+        messages: messages.map(m => ({ role: m.role, content: m.content })),
+        turnCount,
+        userAge: user?.age || 15,
+        hintsUsed: currentHintIndex,
+      });
+
+      setFeedbackData({
+        strengths: localFeedback.strengths,
+        growthAreas: localFeedback.growthAreas,
+        skillsUsed: localFeedback.skillsUsed,
+        overallScore: localFeedback.overallScore,
+        suggestion: localFeedback.suggestion,
+      });
+    }
+
+    // Record progress and check for achievements
+    if (user?.uid && selectedScenario) {
+      try {
+        const result = await ProgressService.recordCompletion(
+          user.uid,
+          selectedScenario.id,
+          feedbackData?.overallScore || 3,
+          turnCount,
+          currentHintIndex,
+          selectedScenario.skillsTargeted,
+          selectedScenario.topicId
+        );
+        
+        if (result.newAchievements.length > 0) {
+          setNewAchievements(result.newAchievements);
+        }
+      } catch (error) {
+        console.error('Error recording progress:', error);
+      }
+    }
+
     setState('feedback');
   };
 
-  const showHintMessage = () => {
+  const showHintMessage = async () => {
     if (!selectedScenario) return;
     
     setShowHint(true);
+    
+    // Build conversation history for contextual hint
+    const conversationHistory: ConversationMessage[] = messages
+      .filter(m => m.role !== 'system')
+      .map(m => ({
+        role: m.role as 'user' | 'ai',
+        content: m.content,
+      }));
+    
+    // Get hint (uses scenario hints with optional AI enhancement)
+    const hint = await AIService.generateHint(
+      selectedScenario,
+      conversationHistory,
+      user?.age || 15
+    );
+    
     const hintMessage: Message = {
       id: `hint-${Date.now()}`,
       role: 'system',
-      content: `💡 Hint: ${selectedScenario.hints[currentHintIndex % selectedScenario.hints.length]}`,
+      content: hint,
       timestamp: new Date(),
     };
     setMessages(prev => [...prev, hintMessage]);
     setCurrentHintIndex(prev => prev + 1);
+    scrollViewRef.current?.scrollToEnd({ animated: true });
   };
 
   // RENDER: Scenario Selection
@@ -492,6 +527,22 @@ export function RoleplayScreen({ navigation, route }: any) {
           </View>
         </View>
 
+        {/* New Achievements */}
+        {newAchievements.length > 0 && (
+          <View style={styles.achievementsSection}>
+            <Text style={styles.achievementsTitle}>🎉 new achievement{newAchievements.length > 1 ? 's' : ''}!</Text>
+            {newAchievements.map((achievement, i) => (
+              <View key={i} style={styles.achievementCard}>
+                <Text style={styles.achievementEmoji}>{achievement.emoji}</Text>
+                <View style={styles.achievementInfo}>
+                  <Text style={styles.achievementName}>{achievement.name}</Text>
+                  <Text style={styles.achievementDesc}>{achievement.description}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
+
         {/* Actions */}
         <View style={styles.feedbackActions}>
           <TouchableOpacity 
@@ -499,6 +550,7 @@ export function RoleplayScreen({ navigation, route }: any) {
             onPress={() => {
               setMessages([]);
               setTurnCount(0);
+              setNewAchievements([]);
               setState('setup');
             }}
           >
@@ -513,6 +565,7 @@ export function RoleplayScreen({ navigation, route }: any) {
               setMessages([]);
               setTurnCount(0);
               setFeedbackData(null);
+              setNewAchievements([]);
               setState('select');
             }}
           >
@@ -677,4 +730,33 @@ const styles = StyleSheet.create({
   newScenarioText: { fontSize: 15, fontWeight: '600', color: '#FFF' },
   doneButton: { alignItems: 'center', marginTop: 20 },
   doneButtonText: { fontSize: 15, color: '#6B7280' },
+  
+  // Achievements
+  achievementsSection: { 
+    backgroundColor: '#FEF3C7', 
+    borderRadius: 16, 
+    padding: 18, 
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: '#F59E0B',
+  },
+  achievementsTitle: { 
+    fontSize: 18, 
+    fontWeight: '700', 
+    color: '#92400E', 
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  achievementCard: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    backgroundColor: '#FFFBEB', 
+    padding: 12, 
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  achievementEmoji: { fontSize: 32, marginRight: 12 },
+  achievementInfo: { flex: 1 },
+  achievementName: { fontSize: 16, fontWeight: '600', color: '#78350F' },
+  achievementDesc: { fontSize: 13, color: '#92400E', marginTop: 2 },
 });
