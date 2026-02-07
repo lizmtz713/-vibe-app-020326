@@ -42,13 +42,14 @@ const MOOD_EXPLAINERS: Record<number, { title: string; why: string; tip: string 
   }
 };
 
+// Quick emotion cards for InsightsScreen - tap for full guide
 const EMOTION_VOCABULARY = [
-  { feeling: "anxious", signs: "racing thoughts, tight chest, can't sit still", deeper: "you might be worried about something uncertain" },
-  { feeling: "overwhelmed", signs: "everything feels like too much, paralyzed", deeper: "your brain has hit capacity — need to offload something" },
-  { feeling: "lonely", signs: "disconnected even around people, emptiness", deeper: "you're craving real connection, not just presence" },
-  { feeling: "angry", signs: "hot, tense, want to snap", deeper: "often covers hurt, fear, or feeling unheard" },
-  { feeling: "numb", signs: "can't feel anything, going through motions", deeper: "your brain's protection mode — usually from too much stress" },
-  { feeling: "restless", signs: "can't focus, need something but don't know what", deeper: "might need change, stimulation, or to process something" },
+  { id: "anxiety", feeling: "anxious", emoji: "😰", signs: "racing thoughts, tight chest, can't sit still", deeper: "tap to learn about anxiety →" },
+  { id: "sadness", feeling: "sad", emoji: "😢", signs: "heavy, tired, want to cry or hide", deeper: "tap to learn about sadness →" },
+  { id: "anger", feeling: "angry", emoji: "😤", signs: "hot, tense, want to snap", deeper: "tap to learn about anger →" },
+  { id: "fear", feeling: "scared", emoji: "😨", signs: "heart racing, want to run or freeze", deeper: "tap to learn about fear →" },
+  { id: "joy", feeling: "happy", emoji: "😄", signs: "light, energized, connected", deeper: "tap to learn about joy →" },
+  { id: "shame", feeling: "ashamed", emoji: "😞", signs: "want to hide, feeling 'not good enough'", deeper: "tap to learn about shame →" },
 ];
 
 const DAY_PATTERNS: Record<number, string> = {
@@ -178,28 +179,26 @@ export function InsightsScreen() {
           </View>
         )}
 
-        {/* Emotion Vocabulary */}
+        {/* Emotion Vocabulary - Inside Out Style */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>feeling something but can't name it?</Text>
-          <Text style={styles.sectionSub}>tap to explore</Text>
+          <Text style={styles.sectionSub}>tap any emotion to learn about it</Text>
           
           {EMOTION_VOCABULARY.map((emotion, i) => (
             <TouchableOpacity 
               key={i} 
-              style={[styles.emotionCard, expandedEmotion === i && styles.emotionCardExpanded]} 
+              style={styles.emotionCard} 
               activeOpacity={0.8}
-              onPress={() => setExpandedEmotion(expandedEmotion === i ? null : i)}
+              onPress={() => navigation.navigate('EmotionDetail' as never, { emotionId: emotion.id } as never)}
             >
               <View style={styles.emotionHeader}>
-                <Text style={styles.emotionName}>{emotion.feeling}</Text>
-                <Text style={styles.expandIcon}>{expandedEmotion === i ? '−' : '+'}</Text>
-              </View>
-              {expandedEmotion === i && (
-                <View style={styles.emotionDetails}>
-                  <Text style={styles.emotionSigns}>📍 signs: {emotion.signs}</Text>
-                  <Text style={styles.emotionDeeper}>🔍 what's underneath: {emotion.deeper}</Text>
+                <Text style={styles.emotionEmoji}>{emotion.emoji}</Text>
+                <View style={styles.emotionInfo}>
+                  <Text style={styles.emotionName}>{emotion.feeling}</Text>
+                  <Text style={styles.emotionSigns}>{emotion.signs}</Text>
                 </View>
-              )}
+                <Ionicons name="chevron-forward" size={20} color="#8B5CF6" />
+              </View>
             </TouchableOpacity>
           ))}
         </View>
@@ -290,20 +289,18 @@ const styles = StyleSheet.create({
   sectionSub: { fontSize: 14, color: '#6B7280', marginBottom: 16 },
   // Emotion Cards
   emotionCard: {
-    backgroundColor: '#FFF', borderRadius: 16, padding: 18, marginBottom: 10,
+    backgroundColor: '#FFF', borderRadius: 16, padding: 16, marginBottom: 10,
     borderLeftWidth: 4, borderLeftColor: '#8B5CF6',
-  },
-  emotionCardExpanded: {
-    backgroundColor: '#F5F3FF', borderLeftColor: '#6366F1',
+    shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05, shadowRadius: 8, elevation: 2,
   },
   emotionHeader: {
-    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    flexDirection: 'row', alignItems: 'center',
   },
-  emotionName: { fontSize: 18, fontWeight: '700', color: '#1F2937' },
-  expandIcon: { fontSize: 24, color: '#8B5CF6', fontWeight: '300' },
-  emotionDetails: { marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: '#E5E7EB' },
-  emotionSigns: { fontSize: 14, color: '#6B7280', marginBottom: 8 },
-  emotionDeeper: { fontSize: 14, color: '#6366F1', fontStyle: 'italic' },
+  emotionEmoji: { fontSize: 32, marginRight: 14 },
+  emotionInfo: { flex: 1 },
+  emotionName: { fontSize: 18, fontWeight: '700', color: '#1F2937', marginBottom: 4, textTransform: 'capitalize' },
+  emotionSigns: { fontSize: 13, color: '#6B7280' },
   // Brain Card
   brainCard: {
     backgroundColor: '#EEF2FF', borderRadius: 20, padding: 24, alignItems: 'center', marginTop: 8,
