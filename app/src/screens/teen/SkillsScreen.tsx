@@ -7,6 +7,7 @@ import { doc, getDoc, setDoc, increment } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
+import { DidYouKnowInline } from '../../components/DidYouKnow';
 
 const { width } = Dimensions.get('window');
 
@@ -159,6 +160,7 @@ export function SkillsScreen({ navigation }: any) {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [skillUsage, setSkillUsage] = useState<Record<string, number>>({});
   const [expandedSkill, setExpandedSkill] = useState<string | null>(null);
+  const [justTriedSkill, setJustTriedSkill] = useState<string | null>(null);
 
   useEffect(() => {
     loadUsage();
@@ -177,12 +179,13 @@ export function SkillsScreen({ navigation }: any) {
     }
   };
 
-  const trackUsage = async (skillId: string) => {
+  const trackUsage = async (skillId: string, category: Skill['category']) => {
     if (!user) return;
     try {
       const docRef = doc(db, 'skillUsage', user.id);
       await setDoc(docRef, { [skillId]: increment(1) }, { merge: true });
       setSkillUsage(prev => ({ ...prev, [skillId]: (prev[skillId] || 0) + 1 }));
+      setJustTriedSkill(skillId);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -283,12 +286,21 @@ export function SkillsScreen({ navigation }: any) {
                   <Text style={styles.scienceText}>{skill.science}</Text>
                 </View>
 
-                <TouchableOpacity 
-                  style={styles.tryButton}
-                  onPress={() => trackUsage(skill.id)}
-                >
-                  <Text style={styles.tryButtonText}>i tried this ✓</Text>
-                </TouchableOpacity>
+                {justTriedSkill === skill.id ? (
+                  <>
+                    <View style={styles.triedConfirm}>
+                      <Text style={styles.triedConfirmText}>✓ nice work!</Text>
+                    </View>
+                    <DidYouKnowInline skillCategory={skill.category} />
+                  </>
+                ) : (
+                  <TouchableOpacity 
+                    style={styles.tryButton}
+                    onPress={() => trackUsage(skill.id, skill.category)}
+                  >
+                    <Text style={styles.tryButtonText}>i tried this ✓</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             )}
           </TouchableOpacity>
@@ -346,4 +358,6 @@ const styles = StyleSheet.create({
   scienceText: { fontSize: 13, color: '#065F46', lineHeight: 18 },
   tryButton: { backgroundColor: '#6366F1', borderRadius: 12, padding: 14, alignItems: 'center', marginTop: 16 },
   tryButtonText: { color: '#FFF', fontSize: 16, fontWeight: '600' },
+  triedConfirm: { backgroundColor: '#10B981', borderRadius: 12, padding: 14, alignItems: 'center', marginTop: 16 },
+  triedConfirmText: { color: '#FFF', fontSize: 16, fontWeight: '600' },
 });
