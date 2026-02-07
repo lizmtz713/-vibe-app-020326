@@ -9,6 +9,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { MoodCheckin } from '../../types';
 import { format, subDays, getDay } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
@@ -71,6 +72,7 @@ const NORMALIZATION_STATS = [
 
 export function InsightsScreen() {
   const { user } = useAuth();
+  const navigation = useNavigation();
   const [checkins, setCheckins] = useState<MoodCheckin[]>([]);
   const [avgMood, setAvgMood] = useState(3);
   const [moodByDay, setMoodByDay] = useState<Record<number, number>>({});
